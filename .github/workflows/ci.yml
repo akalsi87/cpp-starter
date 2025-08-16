@@ -1,0 +1,65 @@
+# .github/workflows/ci.yml
+name: CI
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    # Use a matrix strategy to run the same steps for different build types
+    strategy:
+      matrix:
+        build_type: [Debug, Release, RelWithDebInfo]
+
+    # The name of the job displayed on GitHub.
+    name: BuildAndTest (${{ matrix.build_type }})
+    runs-on: ubuntu-latest
+
+    steps:
+      #-----------------------------------------------------------------------
+      # 1. SETUP - Check out code and set up caching
+      #-----------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache Micromamba environment
+        uses: actions/cache@v4
+        with:
+          path: |
+            .local/micromamba
+            .local/mamba-root
+          key: ${{ runner.os }}-micromamba-${{ hashFiles('environment.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-micromamba-
+
+      - name: Cache vcpkg dependencies
+        # The vcpkg cache key includes the build type, as debug and release
+        # builds can produce different artifacts.
+        uses: actions/cache@v4
+        with:
+          path: .local/vcpkg
+          key: ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-
+
+      #-----------------------------------------------------------------------
+      # 2. BUILD - Compile the project for the specified build type
+      #-----------------------------------------------------------------------
+      - name: Build Project
+        # Pass the build type from the matrix to the Makefile
+        run: BUILD_TYPE=${{ matrix.build_type }} ./repo.sh make build
+
+      #-----------------------------------------------------------------------
+      # 3. TEST - Run all tests for the specified build type
+      #-----------------------------------------------------------------------
+      - name: Run Tests
+        # The test target will find the correct build directory using the BUILD_TYPE
+        run: BUILD_TYPE=${{ matrix.build_type }} ./repo.sh make test

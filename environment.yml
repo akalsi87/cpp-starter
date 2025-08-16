@@ -1,0 +1,16 @@
+channels:
+  - conda-forge
+  - conda-canary
+dependencies:
+  - conda-forge/label/python_rc::_python_rc
+  - python=3.14.0rc1
+  - nodejs=24.4.1
+  - gxx=15.1.0
+  - gcc=15.1.0
+  - ninja=1.13.1
+  - ccache=4.11.3
+  - cmake=4.1.0
+  - bash=5.2.37
+  - clang-tools=20.1.8
+  - make=4.4.1
+  - git=2.49.0

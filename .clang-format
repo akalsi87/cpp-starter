@@ -1,0 +1,12 @@
+---
+BasedOnStyle: Google
+IndentWidth: 2
+ColumnLimit: 80
+AccessModifierOffset: -2
+PointerAlignment: Right
+UseTab: Never
+AllowShortFunctionsOnASingleLine: None
+BinPackArguments: false
+BinPackParameters: OnePerLine
+BitFieldColonSpacing: Both
+...

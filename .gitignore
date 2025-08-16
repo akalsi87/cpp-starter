@@ -1,0 +1,13 @@
+
+# Local development environment
+/.local/
+/build/
+/compile_commands.json
+
+# Caches
+/.cache/
+/.ccache/
+
+# IDE files
+/.vscode/
+/.idea/
