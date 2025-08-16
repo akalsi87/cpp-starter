@@ -36,6 +36,7 @@ jobs:
           path: |
             .local/micromamba
             .local/mamba-root
+            .local/.env_sha
           key: ${{ runner.os }}-micromamba-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-micromamba-
@@ -45,7 +46,9 @@ jobs:
         # builds can produce different artifacts.
         uses: actions/cache@v4
         with:
-          path: .local/vcpkg
+          path: |
+            .local/vcpkg
+            .local/build/*/vcpkg_installed
           key: ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-${{ hashFiles('vcpkg.json') }}
           restore-keys: |
             ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-
