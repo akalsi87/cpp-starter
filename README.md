@@ -25,7 +25,7 @@ A professional, reproducible C++ project template for Linux, powered by Micromam
 
     ```bash
     # TODO: Replace with your repository's URL
-    git clone [https://github.com/akalsi-org/cpp-tpl.git](https://github.com/akalsi-org/cpp-tpl.git) your-repo-name
+    git clone https://github.com/akalsi87/cpp-starter.git your-repo-name
     cd your-repo-name
     ```
 
