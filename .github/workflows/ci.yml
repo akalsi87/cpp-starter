@@ -49,6 +49,7 @@ jobs:
           path: |
             .local/vcpkg
             .local/build/*/vcpkg_installed
+            ~/.cache/vcpkg
           key: ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-${{ hashFiles('vcpkg.json') }}
           restore-keys: |
             ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-
