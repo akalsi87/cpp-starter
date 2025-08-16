@@ -14,6 +14,7 @@ A professional, reproducible C++ project template for Linux, powered by Micromam
 - ✅ **Excellent Developer Experience (DX)**: A simple `Makefile` provides an intuitive interface for common tasks, while `compile_commands.json` is automatically generated and linked to the project root for seamless IDE and editor integration (VS Code, CLion, etc.).
 - ✅ **Optimized for Speed**: **ccache** is automatically enabled for non-debug builds to provide near-instantaneous subsequent compilations. **Link-Time Optimization (LTO)** is enabled for release builds to maximize performance.
 - ✅ **Testing Included**: The project is ready to go with **GoogleTest** for unit and integration testing.
+- ✅ **Built-in CI**: The project includes a basic CI workflow for building and test `Debug`, `RelWithDebInfo` and `Release` variants.
 
 ---
 
