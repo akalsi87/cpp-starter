@@ -3,6 +3,7 @@
 # variables
 REPO_ROOT ?= $(shell git rev-parse --show-toplevel)
 BUILD_TYPE ?= Debug
+COMPILER ?= gcc
 
 LOCAL_ROOT ?= $(REPO_ROOT)/.local
 CMAKE_BUILD_TYPE ?= $(BUILD_TYPE)
@@ -14,6 +15,16 @@ REPO_NAME ?= $(notdir $(REPO_ROOT))
 
 ifndef VERBOSE
 MAKEFLAGS += -s
+endif
+
+ifeq ($(COMPILER),gcc)
+CC := gcc
+CXX := g++
+else ifeq ($(COMPILER),clang)
+CC := clang
+CXX := clang++
+else
+$(error Unsupported or unknown compiler)
 endif
 
 # targets
@@ -60,6 +71,8 @@ CmakeConfigArgs ?= \
 	-DCMAKE_TOOLCHAIN_FILE=$(VCPKG_ROOT)/scripts/buildsystems/vcpkg.cmake \
 	-DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
 	-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+	-DCMAKE_C_COMPILER=$(CC) \
+	-DCMAKE_CXX_COMPILER=$(CXX) \
 	-DREPO_NAME=$(REPO_NAME) \
 
 $(CMAKE_BUILD_DIR): $(VCPKG_BIN)

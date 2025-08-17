@@ -18,6 +18,7 @@ jobs:
     strategy:
       matrix:
         build_type: [Debug, Release, RelWithDebInfo]
+        compiler: [gcc, clang]
 
     # The name of the job displayed on GitHub.
     name: BuildAndTest (${{ matrix.build_type }})
@@ -50,20 +51,23 @@ jobs:
             .local/vcpkg
             .local/build/*/vcpkg_installed
             ~/.cache/vcpkg
-          key: ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-${{ hashFiles('vcpkg.json') }}
+          key: ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-${{ matrix.compiler }}-${{ hashFiles('vcpkg.json') }}
           restore-keys: |
-            ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-
+            ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-${{ matrix.compiler }}-
+
+      - name: Export env vars from matrix
+        run: |
+          echo "BUILD_TYPE=${{ matrix.build_type }}" >> $GITHUB_ENV
+          echo "COMPILER=${{ matrix.compiler }}" >> $GITHUB_ENV
 
       #-----------------------------------------------------------------------
       # 2. BUILD - Compile the project for the specified build type
       #-----------------------------------------------------------------------
       - name: Build Project
-        # Pass the build type from the matrix to the Makefile
-        run: BUILD_TYPE=${{ matrix.build_type }} ./repo.sh make build
+        run: ./repo.sh make build
 
       #-----------------------------------------------------------------------
       # 3. TEST - Run all tests for the specified build type
       #-----------------------------------------------------------------------
       - name: Run Tests
-        # The test target will find the correct build directory using the BUILD_TYPE
-        run: BUILD_TYPE=${{ matrix.build_type }} ./repo.sh make test
+        run: ./repo.sh make test
