@@ -10,7 +10,6 @@ CMAKE_BUILD_TYPE ?= $(BUILD_TYPE)
 VCPKG_ROOT ?= $(LOCAL_ROOT)/vcpkg
 VCPKG_BIN := $(VCPKG_ROOT)/vcpkg
 PATH := $(VCPKG_ROOT):$(PATH)
-CMAKE_BUILD_DIR ?= $(REPO_ROOT)/build/$(CMAKE_BUILD_TYPE)
 REPO_NAME ?= $(notdir $(REPO_ROOT))
 
 ifndef VERBOSE
@@ -26,6 +25,8 @@ CXX := clang++
 else
 $(error Unsupported or unknown compiler)
 endif
+
+CMAKE_BUILD_DIR ?= $(REPO_ROOT)/build/$(COMPILER)-$(CMAKE_BUILD_TYPE)
 
 # targets
 .DEFAULT_GOAL := build
