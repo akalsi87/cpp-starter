@@ -55,6 +55,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-${{ matrix.compiler }}-
 
+      - name: Setup and cache ccache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .local/ccache
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-ccache-${{ github.ref }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-ccache-refs/heads/main
+
       - name: Export env vars from matrix
         run: |
           echo "BUILD_TYPE=${{ matrix.build_type }}" >> $GITHUB_ENV

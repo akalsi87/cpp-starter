@@ -11,6 +11,10 @@ VCPKG_ROOT ?= $(LOCAL_ROOT)/vcpkg
 VCPKG_BIN := $(VCPKG_ROOT)/vcpkg
 PATH := $(VCPKG_ROOT):$(PATH)
 REPO_NAME ?= $(notdir $(REPO_ROOT))
+CCACHE_DIR ?= $(LOCAL_ROOT)/ccache
+NCPU ?= $(shell nproc 2>/dev/null || sysctl -n hw.ncpu)
+
+export CCACHE_DIR
 
 ifndef VERBOSE
 MAKEFLAGS += -s
@@ -26,7 +30,7 @@ else
 $(error Unsupported or unknown compiler)
 endif
 
-ccDir := $(shell dirname `which c++`)
+ccDir := $(shell dirname `which $(CC)`)
 $(shell ln -snf $(CC) $(ccDir)/cc)
 $(shell ln -snf $(CXX) $(ccDir)/c++)
 
@@ -42,7 +46,7 @@ run:
 
 .PHONY: build
 build: $(CMAKE_BUILD_DIR)
-	@$(MAKE) run ARGS="cmake --build $(CMAKE_BUILD_DIR)"
+	@$(MAKE) run ARGS="cmake --build $(CMAKE_BUILD_DIR) -j$(NCPU)"
 
 .PHONY: clean
 clean:
