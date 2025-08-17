@@ -26,6 +26,10 @@ else
 $(error Unsupported or unknown compiler)
 endif
 
+ccDir := $(shell dirname `which c++`)
+$(shell ln -snf $(CC) $(ccDir)/cc)
+$(shell ln -snf $(CXX) $(ccDir)/c++)
+
 CMAKE_BUILD_DIR ?= $(REPO_ROOT)/build/$(COMPILER)-$(CMAKE_BUILD_TYPE)
 
 # targets
@@ -72,9 +76,9 @@ CmakeConfigArgs ?= \
 	-DCMAKE_TOOLCHAIN_FILE=$(VCPKG_ROOT)/scripts/buildsystems/vcpkg.cmake \
 	-DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
 	-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-	-DCMAKE_C_COMPILER=$(CC) \
-	-DCMAKE_CXX_COMPILER=$(CXX) \
-	-DREPO_NAME=$(REPO_NAME) \
+	-DCMAKE_C_COMPILER=cc \
+	-DCMAKE_CXX_COMPILER=c++ \
+	-DREPO_NAME=$(REPO_NAME)
 
 $(CMAKE_BUILD_DIR): $(VCPKG_BIN)
 	@make run ARGS="cmake -S $(REPO_ROOT) -B $@ $(CmakeConfigArgs)" || (rm -rf $@ && exit 1)
