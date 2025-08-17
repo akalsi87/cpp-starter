@@ -55,14 +55,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-vcpkg-${{ matrix.build_type }}-${{ matrix.compiler }}-
 
-      - name: Setup and cache ccache
-        uses: actions/cache@v4
+      - name: Restore the cache ccache
+        uses: actions/cache/restore@v4
         with:
           path: |
             .local/ccache
-          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-ccache-${{ github.ref }}
+            .local/build/
+            !.local/build/*/vcpkg_installed
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-ccache-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-ccache-refs/heads/main
+            ${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-
 
       - name: Export env vars from matrix
         run: |
@@ -80,3 +82,13 @@ jobs:
       #-----------------------------------------------------------------------
       - name: Run Tests
         run: ./repo.sh make test
+
+      - name: Update ccache cache if on the main branch and job passed
+        if: github.ref == 'refs/heads/main' && success()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .local/ccache
+            .local/build/
+            !.local/build/*/vcpkg_installed
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-ccache-${{ github.sha }}
