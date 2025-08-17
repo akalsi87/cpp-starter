@@ -18,6 +18,9 @@ dependencies:
   - nodejs=24.4.1
   - gxx=15.1.0
   - gcc=15.1.0
+  - clang=20.1.8
+  - clangxx=20.1.8
+  - compiler-rt=20.1.8
   - ninja=1.13.1
   - ccache=4.11.3
   - cmake=4.1.0
@@ -25,6 +28,7 @@ dependencies:
   - clang-tools=20.1.8
   - make=4.4.1
   - git=2.49.0
+
 EOF
   fi
 }
